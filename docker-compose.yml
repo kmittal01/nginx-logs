@@ -1,0 +1,43 @@
+version: "3.3"
+
+services:
+  mongo:
+    image: mongo:4
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: column
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongo-db-data:/data/db
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8085:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: column
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+
+
+  backend_column:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    command: uvicorn column.manage:app --host 0.0.0.0 --port 8888 --reload
+    volumes:
+      - ./backend:/app:rw
+      - /var/log/nginx:/nginx_access_log:rw
+    environment:
+      PYTHONPATH: .
+      MONGO_USERNAME: "column"
+      MONGO_PASSWORD: "password"
+      ENV: "DEV"
+      CONFIG: /app/column/app/v1/core/config.py
+    ports:
+      - 8014:8888
+    depends_on:
+      - "mongo"
+
+volumes:
+  mongo-db-data:

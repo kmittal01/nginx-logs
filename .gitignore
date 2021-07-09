@@ -1,0 +1,16 @@
+*.pyc
+.idea/
+.cache/*
+*.sql
+.DS_Store
+resdis-3.2.9/
+backend/config/development.py
+*.cache
+*.sublime*
+redis-3.2.9/tests/
+tests/__pycache__/
+*.docx
+dump.rdb
+flask_session/
+env
+backend/ignore
